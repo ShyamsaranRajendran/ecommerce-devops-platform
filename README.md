@@ -1,71 +1,42 @@
-# E-Commerce DevOps Project
+# E-Commerce DevOps Platform (AWS)
 
-> **Enterprise-grade microservices e-commerce platform on AWS EKS with complete CI/CD automation**
+## Architecture
 
-![Project Status](https://img.shields.io/badge/Status-In%20Development-yellow)
-![AWS](https://img.shields.io/badge/Cloud-AWS-FF9900)
-![Kubernetes](https://img.shields.io/badge/Orchestration-Kubernetes-326CE5)
-![Java](https://img.shields.io/badge/Java-Spring%20Boot-6DB33F)
+Microservices-based e-commerce system deployed on AWS EKS.
 
-## 📋 Table of Contents
+## Tech Stack
 
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Microservices](#microservices)
-- [Tech Stack](#tech-stack)
-- [Environments](#environments)
-- [CI/CD Pipeline](#cicd-pipeline)
-- [Repository Structure](#repository-structure)
-- [Getting Started](#getting-started)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
+- GitHub
+- Jenkins
+- Docker
+- Kubernetes (EKS)
+- Terraform
+- Ansible
+- Prometheus & Grafana
+- ELK Stack
 
-## 🎯 Overview
+## CI/CD Flow
 
-This project implements a production-ready e-commerce platform using **microservices architecture** deployed on **AWS Elastic Kubernetes Service (EKS)**. The platform demonstrates modern DevOps practices including infrastructure as code, continuous integration/deployment, comprehensive monitoring, and enterprise-grade security.
-
-### Key Features
-
-- ✅ Microservices architecture with Java Spring Boot and React
-- ✅ Automated CI/CD pipeline with Jenkins
-- ✅ Infrastructure as Code with Terraform
-- ✅ Configuration management with Ansible
-- ✅ Container orchestration with Kubernetes (EKS)
-- ✅ Comprehensive monitoring with Prometheus & Grafana
-- ✅ Centralized logging with ELK Stack
-- ✅ Security scanning (SonarQube, Trivy)
-- ✅ GitFlow branching strategy
-- ✅ Blue-Green deployment for zero downtime
-
-## 🏗️ Architecture
-
-### High-Level Architecture
-
-```
+feature -> develop -> release -> main
+│
+↓
 ┌─────────────────────────────────────────────────────────────────┐
-│                         END USERS                                │
-└────────────────────────────┬────────────────────────────────────┘
-                             │ HTTPS
-                             ↓
-              AWS Application Load Balancer (ALB)
-                             │
-                             ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                     Azure AKS Cluster                            │
-│                                                                   │
-│   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   │
-│   │  Auth    │   │ Product  │   │  Order   │   │ Payment  │   │
-│   │ Service  │   │ Service  │   │ Service  │   │ Service  │   │
-│   │Java 8    │   │ Java 8   │   │ Java 8   │   │ Java 8   │   │
-│   └────┬─────┘   └────┬─────┘   └────┬─────┘   └────┬─────┘   │
-│        │              │              │              │           │
+│ Azure AKS Cluster │
+│ │
+│ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ │
+│ │ Auth │ │ Product │ │ Order │ │ Payment │ │
+│ │ Service │ │ Service │ │ Service │ │ Service │ │
+│ │Java 8 │ │ Java 8 │ │ Java 8 │ │ Java 8 │ │
+│ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ │
+│ │ │ │ │ │
 └────────┼──────────────┼──────────────┼──────────────┼───────────┘
-         │              │              │              │
-         ↓              ↓              ↓              ↓
-    ┌────────┐    ┌────────┐    ┌────────┐    ┌────────┐
-    │auth-db │    │prod-db │    │order-db│    │pay-db  │
-    │Azure SQL    │Azure SQL    │Azure SQL    │Azure SQL
-    └────────┘    └────────┘    └────────┘    └────────┘
+│ │ │ │
+↓ ↓ ↓ ↓
+┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
+│auth-db │ │prod-db │ │order-db│ │pay-db │
+│Azure SQL │Azure SQL │Azure SQL │Azure SQL
+└────────┘ └────────┘ └────────┘ └────────┘
+
 ```
 
 ### Architecture Principles
@@ -153,7 +124,9 @@ The project uses a three-tier environment strategy:
 ### CI Pipeline (Continuous Integration)
 
 ```
+
 Code Push → Build → Unit Tests → SonarQube → Docker Build → Trivy Scan → Push to ECR
+
 ```
 
 **CI Stages**:
@@ -170,7 +143,9 @@ Code Push → Build → Unit Tests → SonarQube → Docker Build → Trivy Scan
 ### CD Pipeline (Continuous Deployment)
 
 ```
+
 Terraform (Infra) → Ansible (Config) → Helm Deploy → Smoke Test → Approval (Prod) → Deploy
+
 ```
 
 **CD Stages**:
@@ -195,55 +170,57 @@ Terraform (Infra) → Ansible (Config) → Helm Deploy → Smoke Test → Approv
 ## 📁 Repository Structure
 
 ```
+
 ecommerce-devops/
-├── docs/                          # Documentation
-│   ├── architecture.md           # Architecture details
-│   ├── microservices.md          # Service definitions
-│   ├── environments.md           # Environment strategy
-│   ├── tools.md                  # Tool stack details
-│   ├── ci-cd-flow.md             # Pipeline documentation
-│   └── git-strategy.md           # Branching strategy
+├── docs/ # Documentation
+│ ├── architecture.md # Architecture details
+│ ├── microservices.md # Service definitions
+│ ├── environments.md # Environment strategy
+│ ├── tools.md # Tool stack details
+│ ├── ci-cd-flow.md # Pipeline documentation
+│ └── git-strategy.md # Branching strategy
 │
-├── services/                      # Microservices
-│   ├── auth-service/             # Authentication service (Java Spring Boot)
-│   ├── product-service/          # Product catalog service (Java Spring Boot)
-│   ├── order-service/            # Order management service (Java Spring Boot)
-│   └── payment-service/          # Payment processing service (Java Spring Boot)
+├── services/ # Microservices
+│ ├── auth-service/ # Authentication service (Java Spring Boot)
+│ ├── product-service/ # Product catalog service (Java Spring Boot)
+│ ├── order-service/ # Order management service (Java Spring Boot)
+│ └── payment-service/ # Payment processing service (Java Spring Boot)
 │
-├── frontend/                      # React frontend application
+├── frontend/ # React frontend application
 │
-├── docker/                        # Dockerfiles and compose files
+├── docker/ # Dockerfiles and compose files
 │
-├── kubernetes/                    # Kubernetes manifests
-│   ├── dev/                      # Dev environment manifests
-│   ├── qa/                       # QA environment manifests
-│   └── prod/                     # Production manifests
+├── kubernetes/ # Kubernetes manifests
+│ ├── dev/ # Dev environment manifests
+│ ├── qa/ # QA environment manifests
+│ └── prod/ # Production manifests
 │
-├── terraform/                     # Infrastructure as Code
-│   └── modules/                  # Terraform modules
+├── terraform/ # Infrastructure as Code
+│ └── modules/ # Terraform modules
 │
-├── ansible/                       # Configuration Management
-│   ├── playbooks/                # Ansible playbooks
-│   ├── roles/                    # Ansible roles
-│   └── inventory/                # Inventory files
+├── ansible/ # Configuration Management
+│ ├── playbooks/ # Ansible playbooks
+│ ├── roles/ # Ansible roles
+│ └── inventory/ # Inventory files
 │
-├── helm/                          # Helm charts
-│   ├── auth-service/             # Auth service chart
-│   ├── product-service/          # Product service chart
-│   ├── order-service/            # Order service chart
-│   ├── payment-service/          # Payment service chart
-│   └── frontend/                 # Frontend chart
+├── helm/ # Helm charts
+│ ├── auth-service/ # Auth service chart
+│ ├── product-service/ # Product service chart
+│ ├── order-service/ # Order service chart
+│ ├── payment-service/ # Payment service chart
+│ └── frontend/ # Frontend chart
 │
-├── jenkins/                       # Jenkins pipeline definitions
-│   └── pipelines/                # Jenkinsfiles
+├── jenkins/ # Jenkins pipeline definitions
+│ └── pipelines/ # Jenkinsfiles
 │
-├── monitoring/                    # Monitoring configurations
-│   ├── prometheus/               # Prometheus config
-│   ├── grafana/                  # Grafana dashboards
-│   └── elk/                      # ELK stack config
+├── monitoring/ # Monitoring configurations
+│ ├── prometheus/ # Prometheus config
+│ ├── grafana/ # Grafana dashboards
+│ └── elk/ # ELK stack config
 │
-└── README.md                      # This file
-```
+└── README.md # This file
+
+````
 
 ## 🚦 Getting Started
 
@@ -265,7 +242,7 @@ ecommerce-devops/
    ```bash
    git clone <repository-url>
    cd ecommerce-devops
-   ```
+````
 
 2. **Run services locally with Docker Compose** (Coming soon)
 
